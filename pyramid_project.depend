@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1633966384 source:e:\upi\semester 3\grafikom\pyramid_project\glad.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<glad/glad.h>
+	<windows.h>
+	<winapifamily.h>
+	<dlfcn.h>
+
