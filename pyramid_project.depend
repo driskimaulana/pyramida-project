@@ -8,3 +8,16 @@
 	<winapifamily.h>
 	<dlfcn.h>
 
+1639290666 source:e:\upi\semester 3\grafikom\pyramid_project\main.cpp
+	<glad/glad.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<learnopengl/shader_m.h>
+	<learnopengl/shader_m.h>
+	<learnopengl/camera.h>
+	<learnopengl/model.h>
+	<iostream>
+	<stb_image.h>
+

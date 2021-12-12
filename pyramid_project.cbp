@@ -14,6 +14,11 @@
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libgdi32.a" />
+					<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libglfw3.a" />
+					<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libglfw3dll.a" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/pyramid_project" prefix_auto="1" extension_auto="1" />
@@ -25,6 +30,9 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libgdi32.a" />
+					<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libglfw3.a" />
+					<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libglfw3dll.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -32,6 +40,14 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Linker>
+			<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libgdi32.a" />
+			<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libglfw3.a" />
+			<Add library="C:/Program Files/CodeBlocks/MinGW/lib/libglfw3dll.a" />
+		</Linker>
+		<Unit filename="glad.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
