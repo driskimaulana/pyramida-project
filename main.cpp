@@ -82,33 +82,46 @@ int main()
     // -------------------------
     Shader shader("shaders/6.1.cubemaps.vs", "shaders/6.1.cubemaps.fs");
     Shader skyboxShader("shaders/6.1.skybox.vs", "shaders/6.1.skybox.fs");
+    Shader groundShader("shaders/6.1.cubemaps.vs", "shaders/6.1.cubemaps.fs");
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float cubeVertices[] = {
         // positions          // texture Coords
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-        0.0f,  0.5f,  0.0f, 0.5f, 1.0f,
+        // belakang
+        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
+        0.0f,  1.0f,  0.0f, 0.5f, 1.0f,
 
-       -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-        0.0f,  0.5f,  0.0f, 0.5f, 1.0f,
+        // depan
+       -1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
+        1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
+        0.0f,  1.0f,  0.0f, 0.5f, 1.0f,
 
-       -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-       -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-        0.0f,  0.5f,  0.0f, 0.5f, 1.0f,
+        // kiri
+       -1.0f, -1.0f, -1.0f, 0.0f, 1.0f,
+       -1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
+        0.0f,  1.0f,  0.0f, 0.5f, 1.0f,
 
-        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-        0.0f,  0.5f,  0.0f, 0.5f, 1.0f,
+        // kanan
+        1.0f, -1.0f, -1.0f, 0.0f, 1.0f,
+        1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
+        0.0f,  1.0f,  0.0f, 0.5f, 1.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        // bawah
+        -1.0f, -1.0f, -1.0f,  0.0f, 1.0f,
+         1.0f, -1.0f, -1.0f,  1.0f, 1.0f,
+         1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
+         1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
+        -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f,  0.0f, 1.0f,
+
+        2.0f, -1.0f, 2.0f,  0.0f, 1.0f,
+         2.5f, -1.0f, 2.0f,  1.0f, 1.0f,
+        2.0f, 0.1f,  2.0f,  1.0f, 0.0f,
+         2.5f, 0.1f,  2.0f,  1.0f, 0.0f,
+        2.0f, 0.1f,  2.0f,  1.0f, 0.0f,
+        2.5f, -1.0f, 2.0f,  0.0f, 1.0f,
     };
     float skyboxVertices[] = {
         // positions
@@ -155,6 +168,29 @@ int main()
          1.0f, -1.0f,  1.0f
     };
 
+    float groundVertices[] = {
+
+        // ground
+        -100.0f, -1.0f, -100.0f,  0.0f, 1.0f,
+         100.0f, -1.0f, -100.0f,  1.0f, 1.0f,
+         100.0f, -1.0f,  100.0f,  2.0f, 0.0f,
+         100.0f, -1.0f,  100.0f,  1.0f, 0.0f,
+        -100.0f, -1.0f,  100.0f,  0.0f, 0.0f,
+        -100.0f, -1.0f, -100.0f,  0.0f, 1.0f,
+
+    };
+
+    float fortVertices[] = {
+
+        -2.0f, -2.0f, 2.0f,  0.0f, 1.0f,
+         -2.5f, -2.0f, 2.0f,  1.0f, 1.0f,
+        -1.5f, -1.5f,  1.0f,  1.0f, 0.0f,
+         -2.0f, -1.5f,  1.0f,  1.0f, 0.0f,
+        -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
+        -1.0f, -1.0f, -1.0f,  0.0f, 1.0f,
+
+    };
+
     // cube VAO
     unsigned int cubeVAO, cubeVBO;
     glGenVertexArrays(1, &cubeVAO);
@@ -162,6 +198,18 @@ int main()
     glBindVertexArray(cubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    // ground VAO
+    unsigned int groundVAO, groundVBO;
+    glGenVertexArrays(1, &groundVAO);
+    glGenBuffers(1, &groundVBO);
+    glBindVertexArray(groundVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(groundVertices), &groundVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
@@ -178,7 +226,8 @@ int main()
 
     // load textures
     // -------------
-    unsigned int cubeTexture = loadTexture("resources/textures/container.jpg");
+    unsigned int cubeTexture = loadTexture("resources/textures/texturepyramid.jpeg");
+    unsigned int groundTexture = loadTexture("resources/textures/sand.jpg");
     vector<std::string> faces
     {
         "resources/textures/skybox/right.jpg",
@@ -197,6 +246,9 @@ int main()
 
     skyboxShader.use();
     skyboxShader.setInt("skybox", 0);
+
+    groundShader.use();
+    groundShader.setInt("texture2", 0);
 
     // render loop
     // -----------
@@ -225,12 +277,28 @@ int main()
         shader.setMat4("model", model);
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
+
         // cubes
         glBindVertexArray(cubeVAO);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, cubeTexture);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
+
+        // ground
+        groundShader.use();
+
+        groundShader.setMat4("model", model);
+        groundShader.setMat4("view", view);
+        groundShader.setMat4("projection", projection);
+
+        glBindVertexArray(groundVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, groundTexture);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(1);
+
+
 
         // draw skybox as last
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
