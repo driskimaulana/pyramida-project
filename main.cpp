@@ -27,7 +27,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 3.0f, 20.0f));
 float lastX = (float)SCR_WIDTH / 2.0;
 float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
@@ -89,39 +89,32 @@ int main()
     float cubeVertices[] = {
         // positions          // texture Coords
         // belakang
-        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-        1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
-        0.0f,  1.0f,  0.0f, 0.5f, 1.0f,
+           -5.0f, -1.0f, -5.0f,      0.0f,   0.0f,
+        5.0f, -1.0f, -5.0f,      20.0f,  0.0f,
+        0.0f,   5.0f,  0.0f,       10.0f,  20.0f,
 
         // depan
-       -1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
-        1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
-        0.0f,  1.0f,  0.0f, 0.5f, 1.0f,
+       -5.0f, -1.0f,  5.0f,      0.0f,   0.0f,
+        5.0f, -1.0f,  5.0f,      20.0f,  0.0f,
+        0.0f,   5.0f,  0.0f,       10.0f,  20.0f,
 
         // kiri
-       -1.0f, -1.0f, -1.0f, 0.0f, 1.0f,
-       -1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
-        0.0f,  1.0f,  0.0f, 0.5f, 1.0f,
+      -5.0f, -1.0f, -5.0f,       20.0f,  0.0f,
+      -5.0f, -1.0f,  5.0f,       0.0f,   0.0f,
+       0.0f,   5.0f,  0.0f,        10.0f,  20.0f,
 
         // kanan
-        1.0f, -1.0f, -1.0f, 0.0f, 1.0f,
-        1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
-        0.0f,  1.0f,  0.0f, 0.5f, 1.0f,
+       5.0f, -1.0f, -5.0f,       20.0f,  0.0f,
+       5.0f, -1.0f,  5.0f,       0.0f,   0.0f,
+       0.0f,  5.0f,  0.0f,         10.0f,  20.0f,
 
         // bawah
-        -1.0f, -1.0f, -1.0f,  0.0f, 1.0f,
-         1.0f, -1.0f, -1.0f,  1.0f, 1.0f,
-         1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
-         1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
-        -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f,  0.0f, 1.0f,
-
-        2.0f, -1.0f, 2.0f,  0.0f, 1.0f,
-         2.5f, -1.0f, 2.0f,  1.0f, 1.0f,
-        2.0f, 0.1f,  2.0f,  1.0f, 0.0f,
-         2.5f, 0.1f,  2.0f,  1.0f, 0.0f,
-        2.0f, 0.1f,  2.0f,  1.0f, 0.0f,
-        2.5f, -1.0f, 2.0f,  0.0f, 1.0f,
+      -5.0f, -1.0f, -5.0f,       0.0f,   20.0f,
+       5.0f, -1.0f, -5.0f,       20.0f,   20.0f,
+       5.0f, -1.0f,  5.0f,       20.0f,   0.0f,
+       5.0f, -1.0f,  5.0f,       20.0f,   0.0f,
+      -5.0f, -1.0f,  5.0f,       0.0f,   0.0f,
+      -5.0f, -1.0f, -5.0f,       0.0f,   20.0f,
     };
     float skyboxVertices[] = {
         // positions
@@ -173,7 +166,7 @@ int main()
         // ground
         -100.0f, -1.0f, -100.0f,  0.0f, 1.0f,
          100.0f, -1.0f, -100.0f,  1.0f, 1.0f,
-         100.0f, -1.0f,  100.0f,  2.0f, 0.0f,
+         100.0f, -1.0f,  100.0f,  1.0f, 0.0f,
          100.0f, -1.0f,  100.0f,  1.0f, 0.0f,
         -100.0f, -1.0f,  100.0f,  0.0f, 0.0f,
         -100.0f, -1.0f, -100.0f,  0.0f, 1.0f,
@@ -231,7 +224,7 @@ int main()
     vector<std::string> faces
     {
         "resources/textures/skybox/right.jpg",
-        "resources/textures/skybox/left.jpg",
+        "resources/textures/skybox/left7.jpg",
         "resources/textures/skybox/top.jpg",
         "resources/textures/skybox/bottom.jpg",
         "resources/textures/skybox/front.jpg",
