@@ -36,8 +36,6 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-// lighting
-glm::vec3 lightPos(15.0f, 15.0f, -15.0f);
 
 
 int main()
@@ -246,6 +244,16 @@ int main()
 
     };
 
+    // vertex street
+    float streetVertices[] = {
+
+        // ground
+        -2.0f, -1.1f, 14.0f, 0.0f, 0.0f,
+        2.0f, -1.1f, 5.2f, 1.0f, 1.0f,
+        2.0f, -1.1f, 14.0f, 0.0f, 1.0f,
+
+    };
+
     // vertex untuk benteng
     float fortVertices[] = {
 
@@ -425,6 +433,7 @@ int main()
         -14.0f, 0.0f, -14.5f, 1.0f, 0.0f,
     };
 
+
     // cube VAO
     unsigned int cubeVAO, cubeVBO;
     glGenVertexArrays(1, &cubeVAO);
@@ -473,16 +482,17 @@ int main()
     // load textures
     // -------------
     unsigned int cubeTexture = loadTexture("resources/textures/texturepyramid.jpeg");
-    unsigned int groundTexture = loadTexture("resources/textures/sand.jpg");
+    unsigned int groundTexture = loadTexture("resources/textures/sand2.jpg");
     unsigned int fortTexture = loadTexture("resources/textures/wall2.jpg");
     vector<std::string> faces
     {
-        "resources/textures/skybox/right.jpg",
-        "resources/textures/skybox/left.jpg",
-        "resources/textures/skybox/top.jpg",
-        "resources/textures/skybox/bottom.jpg",
-        "resources/textures/skybox/front.jpg",
-        "resources/textures/skybox/back.jpg"
+
+        "resources/textures/skybox2/px.jpg",
+        "resources/textures/skybox2/nx.jpg",
+        "resources/textures/skybox2/py.jpg",
+        "resources/textures/skybox2/ny.jpg",
+        "resources/textures/skybox2/pz.jpg",
+        "resources/textures/skybox2/nz.jpg"
 
     };
     unsigned int cubemapTexture = loadCubemap(faces);
