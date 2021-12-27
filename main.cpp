@@ -27,7 +27,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 3.0f, 20.0f));
+Camera camera(glm::vec3(0.0f, 5.0f, 40.0f));
 float lastX = (float)SCR_WIDTH / 2.0;
 float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
@@ -35,6 +35,10 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+// lighting
+glm::vec3 lightPos(15.0f, 15.0f, -15.0f);
+
 
 int main()
 {
@@ -83,15 +87,20 @@ int main()
     Shader shader("shaders/6.1.cubemaps.vs", "shaders/6.1.cubemaps.fs");
     Shader skyboxShader("shaders/6.1.skybox.vs", "shaders/6.1.skybox.fs");
     Shader groundShader("shaders/6.1.cubemaps.vs", "shaders/6.1.cubemaps.fs");
+    Shader fortShader("shaders/6.1.cubemaps.vs", "shaders/6.1.cubemaps.fs");
+
+    // build and compile our shader zprogram
+    // ------------------------------------
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float cubeVertices[] = {
         // positions          // texture Coords
         // belakang
-           -5.0f, -1.0f, -5.0f,      0.0f,   0.0f,
+        -5.0f, -1.0f, -5.0f,      0.0f,   0.0f,
         5.0f, -1.0f, -5.0f,      20.0f,  0.0f,
         0.0f,   5.0f,  0.0f,       10.0f,  20.0f,
+
 
         // depan
        -5.0f, -1.0f,  5.0f,      0.0f,   0.0f,
@@ -115,7 +124,70 @@ int main()
        5.0f, -1.0f,  5.0f,       20.0f,   0.0f,
       -5.0f, -1.0f,  5.0f,       0.0f,   0.0f,
       -5.0f, -1.0f, -5.0f,       0.0f,   20.0f,
+
+        // belakang
+        -13.0f, -1.0f, 4.0f,      0.0f,   0.0f,
+        -7.0f, -1.0f, 4.0f,      20.0f,  0.0f,
+        -10.0f,   3.0f,  7.0f,       10.0f,  20.0f,
+
+
+        // depan
+       -13.0f, -1.0f,  10.0f,      0.0f,   0.0f,
+        -7.0f, -1.0f,  10.0f,      20.0f,  0.0f,
+        -10.0f,   3.0f,  7.0f,       10.0f,  20.0f,
+
+        // kiri
+      -13.0f, -1.0f, 4.0f,       20.0f,  0.0f,
+      -13.0f, -1.0f,  10.0f,       0.0f,   0.0f,
+       -10.0f,   3.0f,  7.0f,        10.0f,  20.0f,
+
+        // kanan
+       -7.0f, -1.0f, 4.0f,       20.0f,  0.0f,
+       -7.0f, -1.0f,  10.0f,       0.0f,   0.0f,
+       -10.0f,  3.0f,  7.0f,         10.0f,  20.0f,
+
+        // bawah
+      -13.0f, -1.0f, 4.0f,       0.0f,   20.0f,
+       -7.0f, -1.0f, 4.0f,       20.0f,   20.0f,
+       -7.0f, -1.0f,  10.0f,       20.0f,   0.0f,
+       -7.0f, -1.0f,  10.0f,       20.0f,   0.0f,
+      -13.0f, -1.0f,  10.0f,       0.0f,   0.0f,
+      -13.0f, -1.0f, 4.0f,       0.0f,   20.0f,
+
+
+       // belakang
+        7.0f, -1.0f, -8.0f,      0.0f,   0.0f,
+        13.0f, -1.0f, -8.0f,      20.0f,  0.0f,
+        10.0f,   3.0f,  -5.0f,       10.0f,  20.0f,
+
+
+        // depan
+       7.0f, -1.0f,  -2.0f,      0.0f,   0.0f,
+        13.0f, -1.0f,  -2.0f,      20.0f,  0.0f,
+        10.0f,   3.0f,  -5.0f,       10.0f,  20.0f,
+
+        // kiri
+      7.0f, -1.0f, -8.0f,       20.0f,  0.0f,
+      7.0f, -1.0f,  -2.0f,       0.0f,   0.0f,
+       10.0f,   3.0f,  -5.0f,        10.0f,  20.0f,
+
+        // kanan
+       13.0f, -1.0f, -8.0f,       20.0f,  0.0f,
+       13.0f, -1.0f,  -2.0f,       0.0f,   0.0f,
+       10.0f,  3.0f,  -5.0f,         10.0f,  20.0f,
+
+        // bawah
+      7.0f, -1.0f, -8.0f,       0.0f,   20.0f,
+       13.0f, -1.0f, -8.0f,       20.0f,   20.0f,
+       13.0f, -1.0f,  -2.0f,       20.0f,   0.0f,
+       13.0f, -1.0f,  -2.0f,       20.0f,   0.0f,
+      7.0f, -1.0f,  -2.0f,       0.0f,   0.0f,
+      7.0f, -1.0f, -8.0f,       0.0f,   20.0f,
+
+
     };
+
+    // vertex untuk skybox
     float skyboxVertices[] = {
         // positions
         -1.0f,  1.0f, -1.0f,
@@ -161,6 +233,7 @@ int main()
          1.0f, -1.0f,  1.0f
     };
 
+    // vertex untuk terrain
     float groundVertices[] = {
 
         // ground
@@ -173,15 +246,183 @@ int main()
 
     };
 
+    // vertex untuk benteng
     float fortVertices[] = {
 
-        -2.0f, -2.0f, 2.0f,  0.0f, 1.0f,
-         -2.5f, -2.0f, 2.0f,  1.0f, 1.0f,
-        -1.5f, -1.5f,  1.0f,  1.0f, 0.0f,
-         -2.0f, -1.5f,  1.0f,  1.0f, 0.0f,
-        -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
-        -1.0f, -1.0f, -1.0f,  0.0f, 1.0f,
+        // ====== FRONT =========
+        //front-right
+        //sudut kiri bwah
+        2.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+        // sudut kiri atas
+        2.0f, 0.0f, 14.0f, 0.0f, 1.0f,
+        //sudut kanan atas
+        2.0f, 0.0f, 14.5f, 1.0f, 1.0f,
 
+        //sudut kiri bawah
+        2.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+        //sudut kanan atas
+        2.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+        //sudut kanan bawah
+        2.0f, -1.0f, 14.5f, 1.0f, 0.0f,
+
+        2.0f, -1.0f, 14.5f, 0.0f, 0.0f,
+        2.0f, 0.0f, 14.5f, 0.0f, 1.0f,
+        14.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+        14.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+        14.0f, -1.0f, 14.5f, 1.0f, 0.0f,
+        2.0f, -1.0f, 14.5f, 0.0f, 0.0f,
+
+        2.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+        2.0f, 0.0f, 14.0f, 0.0f, 1.0f,
+        14.0f, 0.0f, 14.0f, 1.0f, 1.0f,
+        14.0f, 0.0f, 14.0f, 1.0f, 1.0f,
+        14.0f, -1.0f, 14.0f, 1.0f, 0.0f,
+        2.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+
+        14.0f, -1.0f, 14.0f, 0.0f, 1.0f,
+        14.0f, 0.0f, 14.0f, 1.0f, 1.0f,
+        14.0f, 0.0f, 14.5f, 1.0f, 0.0f,
+        14.0f, -1.0f, 14.0f, 0.0f, 1.0f,
+        14.0f, 0.0f, 14.5f, 0.0f, 0.0f,
+        14.0f, -1.0f, 14.5f, 1.0f, 0.0f,
+
+        14.0f, 0.0f, 14.0f, 0.0f, 1.0f,
+        14.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+        2.0f, 0.0f, 14.0f, 0.0f, 0.0f,
+        2.0f, 0.0f, 14.0f, 0.0f, 0.0f,
+        14.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+        2.0f, 0.0f, 14.5f, 1.0f, 0.0f,
+
+        // front-left
+
+        //sudut kiri bwah
+        -2.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+        // sudut kiri atas
+        -2.0f, 0.0f, 14.0f, 0.0f, 1.0f,
+        //sudut kanan atas
+        -2.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+
+        //sudut kiri bawah
+        -2.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+        //sudut kanan atas
+        -2.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+        //sudut kanan bawah
+        -2.0f, -1.0f, 14.5f, 1.0f, 0.0f,
+
+        -2.0f, -1.0f, 14.5f, 0.0f, 0.0f,
+        -2.0f, 0.0f, 14.5f, 0.0f, 1.0f,
+        -14.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+        -14.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+        -14.0f, -1.0f, 14.5f, 1.0f, 0.0f,
+        -2.0f, -1.0f, 14.5f, 0.0f, 0.0f,
+
+        -2.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+        -2.0f, 0.0f, 14.0f, 0.0f, 1.0f,
+        -14.0f, 0.0f, 14.0f, 1.0f, 1.0f,
+        -14.0f, 0.0f, 14.0f, 1.0f, 1.0f,
+        -14.0f, -1.0f, 14.0f, 1.0f, 0.0f,
+        -2.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+
+        -14.0f, -1.0f, 14.0f, 0.0f, 1.0f,
+        -14.0f, 0.0f, 14.0f, 1.0f, 1.0f,
+        -14.0f, 0.0f, 14.5f, 1.0f, 0.0f,
+        -14.0f, -1.0f, 14.0f, 0.0f, 1.0f,
+        -14.0f, 0.0f, 14.5f, 0.0f, 0.0f,
+        -14.0f, -1.0f, 14.5f, 1.0f, 0.0f,
+
+        -14.0f, 0.0f, 14.0f, 0.0f, 1.0f,
+        -14.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+        -2.0f, 0.0f, 14.0f, 0.0f, 0.0f,
+        -2.0f, 0.0f, 14.0f, 0.0f, 0.0f,
+        -14.0f, 0.0f, 14.5f, 1.0f, 1.0f,
+        -2.0f, 0.0f, 14.5f, 1.0f, 0.0f,
+
+        // ====== RIGHT =========
+        14.0f, 0.0f, 14.0f, 0.0f, 1.0f,
+        13.5f, 0.0f, 14.0f, 0.0f, 0.0f,
+        14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        13.5f, 0.0f, 14.0f, 0.0f, 0.0f,
+        13.5f, 0.0f, -14.0f, 1.0f, 0.0f,
+
+        13.5f, 0.0f, 14.0f, 0.0f, 1.0f,
+        13.5f, -1.0f, 14.0f, 0.0f, 0.0f,
+        13.5f, 0.0f, -14.0f, 1.0f, 1.0f,
+        13.5f, -1.0f, 14.0f, 0.0f, 0.0f,
+        13.5f, 0.0f, -14.0f, 1.0f, 1.0f,
+        13.5f, -1.0f, -14.0f, 1.0f, 0.0f,
+
+        14.0f, 0.0f, 14.0f, 0.0f, 1.0f,
+        14.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+        14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        14.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+        14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        14.0f, -1.0f, -14.0f, 1.0f, 0.0f,
+
+        // ====== LEFT =========
+        -14.0f, 0.0f, 14.0f, 0.0f, 1.0f,
+        -13.5f, 0.0f, 14.0f, 0.0f, 0.0f,
+        -14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        -14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        -13.5f, 0.0f, 14.0f, 0.0f, 0.0f,
+        -13.5f, 0.0f, -14.0f, 1.0f, 0.0f,
+
+        -13.5f, 0.0f, 14.0f, 0.0f, 1.0f,
+        -13.5f, -1.0f, 14.0f, 0.0f, 0.0f,
+        -13.5f, 0.0f, -14.0f, 1.0f, 1.0f,
+        -13.5f, -1.0f, 14.0f, 0.0f, 0.0f,
+        -13.5f, 0.0f, -14.0f, 1.0f, 1.0f,
+        -13.5f, -1.0f, -14.0f, 1.0f, 0.0f,
+
+        -14.0f, 0.0f, 14.0f, 0.0f, 1.0f,
+        -14.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+        -14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        -14.0f, -1.0f, 14.0f, 0.0f, 0.0f,
+        -14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        -14.0f, -1.0f, -14.0f, 1.0f, 0.0f,
+
+        // ====== BACK =========
+        //sudut kiri bwah
+        -14.0f, -1.0f, -14.0f, 0.0f, 0.0f,
+        // sudut kiri atas
+        -14.0f, 0.0f, -14.0f, 0.0f, 1.0f,
+        //sudut kanan atas
+        -14.0f, 0.0f, -14.5f, 1.0f, 1.0f,
+
+        //sudut kiri bawah
+        -14.0f, -1.0f, -14.0f, 0.0f, 0.0f,
+        //sudut kanan atas
+        -14.0f, 0.0f, -14.5f, 1.0f, 1.0f,
+        //sudut kanan bawah
+        -14.0f, -1.0f, -14.5f, 1.0f, 0.0f,
+
+        -14.0f, -1.0f, -14.5f, 0.0f, 0.0f,
+        -14.0f, 0.0f, -14.5f, 0.0f, 1.0f,
+        14.0f, 0.0f, -14.5f, 1.0f, 1.0f,
+        14.0f, 0.0f, -14.5f, 1.0f, 1.0f,
+        14.0f, -1.0f, -14.5f, 1.0f, 0.0f,
+        -14.0f, -1.0f, -14.5f, 0.0f, 0.0f,
+
+        -14.0f, -1.0f, -14.0f, 0.0f, 0.0f,
+        -14.0f, 0.0f, -14.0f, 0.0f, 1.0f,
+        14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        14.0f, -1.0f, -14.0f, 1.0f, 0.0f,
+        -14.0f, -1.0f, -14.0f, 0.0f, 0.0f,
+
+        14.0f, -1.0f, -14.0f, 0.0f, 1.0f,
+        14.0f, 0.0f, -14.0f, 1.0f, 1.0f,
+        14.0f, 0.0f, -14.5f, 1.0f, 0.0f,
+        14.0f, -1.0f, -14.0f, 0.0f, 1.0f,
+        14.0f, 0.0f, -14.5f, 0.0f, 0.0f,
+        14.0f, -1.0f, -14.5f, 1.0f, 0.0f,
+
+        14.0f, 0.0f, -14.0f, 0.0f, 1.0f,
+        14.0f, 0.0f, -14.5f, 1.0f, 1.0f,
+        -14.0f, 0.0f, -14.0f, 0.0f, 0.0f,
+        -14.0f, 0.0f, -14.0f, 0.0f, 0.0f,
+        14.0f, 0.0f, -14.5f, 1.0f, 1.0f,
+        -14.0f, 0.0f, -14.5f, 1.0f, 0.0f,
     };
 
     // cube VAO
@@ -191,6 +432,18 @@ int main()
     glBindVertexArray(cubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    // fort VAO
+    unsigned int fortVAO, fortVBO;
+    glGenVertexArrays(1, &fortVAO);
+    glGenBuffers(1, &fortVBO);
+    glBindVertexArray(fortVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, fortVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(fortVertices), &fortVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
@@ -221,14 +474,16 @@ int main()
     // -------------
     unsigned int cubeTexture = loadTexture("resources/textures/texturepyramid.jpeg");
     unsigned int groundTexture = loadTexture("resources/textures/sand.jpg");
+    unsigned int fortTexture = loadTexture("resources/textures/wall2.jpg");
     vector<std::string> faces
     {
         "resources/textures/skybox/right.jpg",
-        "resources/textures/skybox/left7.jpg",
+        "resources/textures/skybox/left.jpg",
         "resources/textures/skybox/top.jpg",
         "resources/textures/skybox/bottom.jpg",
         "resources/textures/skybox/front.jpg",
         "resources/textures/skybox/back.jpg"
+
     };
     unsigned int cubemapTexture = loadCubemap(faces);
 
@@ -242,6 +497,9 @@ int main()
 
     groundShader.use();
     groundShader.setInt("texture2", 0);
+
+    fortShader.use();
+    fortShader.setInt("texture3", 0);
 
     // render loop
     // -----------
@@ -271,14 +529,14 @@ int main()
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
 
-        // cubes
+        // render piramid
         glBindVertexArray(cubeVAO);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, cubeTexture);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 162);
         glBindVertexArray(0);
 
-        // ground
+        // render ground
         groundShader.use();
 
         groundShader.setMat4("model", model);
@@ -291,9 +549,21 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(1);
 
+        // render wall
+        fortShader.use();
+
+        fortShader.setMat4("model", model);
+        fortShader.setMat4("view", view);
+        fortShader.setMat4("projection", projection);
+
+        glBindVertexArray(fortVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, fortTexture);
+        glDrawArrays(GL_TRIANGLES, 0, 180);
+        glBindVertexArray(1);
 
 
-        // draw skybox as last
+        // menggambar skybox
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
         skyboxShader.use();
         view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
@@ -387,7 +657,6 @@ unsigned int loadTexture(std::string path)
 
     int width, height, nrComponents;
     unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0);
-    //unsigned char *data = stbi_load("resources/textures/texturepyramid.jpeg", &width, &height, &nrChannels, 0);
     if (data)
     {
         GLenum format;
@@ -418,15 +687,6 @@ unsigned int loadTexture(std::string path)
     return textureID;
 }
 
-// loads a cubemap texture from 6 individual texture faces
-// order:
-// +X (right)
-// -X (left)
-// +Y (top)
-// -Y (bottom)
-// +Z (front)
-// -Z (back)
-// -------------------------------------------------------
 unsigned int loadCubemap(vector<std::string> faces)
 {
     unsigned int textureID;
