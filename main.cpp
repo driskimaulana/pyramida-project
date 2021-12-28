@@ -53,7 +53,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Giza Pyramid", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -86,6 +86,7 @@ int main()
     Shader skyboxShader("shaders/6.1.skybox.vs", "shaders/6.1.skybox.fs");
     Shader groundShader("shaders/6.1.cubemaps.vs", "shaders/6.1.cubemaps.fs");
     Shader fortShader("shaders/6.1.cubemaps.vs", "shaders/6.1.cubemaps.fs");
+    Shader streetsShader("shaders/6.1.cubemaps.vs", "shaders/6.1.cubemaps.fs");
 
     // build and compile our shader zprogram
     // ------------------------------------
@@ -245,12 +246,18 @@ int main()
     };
 
     // vertex street
-    float streetVertices[] = {
+    float streetsVertices[] = {
 
         // ground
-        -2.0f, -1.1f, 14.0f, 0.0f, 0.0f,
-        2.0f, -1.1f, 5.2f, 1.0f, 1.0f,
-        2.0f, -1.1f, 14.0f, 0.0f, 1.0f,
+        -14.0f, -0.9f, 14.5f, 0.0f, 0.0f,
+        14.0f, -0.9f, 14.5f, 1.0f, 1.0f,
+        -14.0f, -0.9f, -14.0f, 0.0f, 1.0f,
+        14.0f, -0.9f, 14.5f, 1.0f, 1.0f,
+        -14.0f, -0.9f, -14.0f, 0.0f, 1.0f,
+        14.0, -0.9f,-14.0f, 1.0f, 0.0f
+        //2.0f, -0.9f, 5.2f, 1.0f, 1.0f,
+        //-2.0f, -0.9f, 14.0f, 0.0f, 0.0f,
+        //-2.0f, -0.9f, 5.2f, 1.0f, 0.0f,
 
     };
 
@@ -302,6 +309,7 @@ int main()
         2.0f, 0.0f, 14.5f, 1.0f, 0.0f,
 
         // front-left
+
 
         //sudut kiri bwah
         -2.0f, -1.0f, 14.0f, 0.0f, 0.0f,
@@ -469,6 +477,19 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    // streets VAO
+    unsigned int streetsVAO, streetsVBO;
+    glGenVertexArrays(1, &streetsVAO);
+    glGenBuffers(1, &streetsVBO);
+    glBindVertexArray(streetsVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, streetsVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(streetsVertices), &streetsVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
     // skybox VAO
     unsigned int skyboxVAO, skyboxVBO;
     glGenVertexArrays(1, &skyboxVAO);
@@ -484,15 +505,15 @@ int main()
     unsigned int cubeTexture = loadTexture("resources/textures/texturepyramid.jpeg");
     unsigned int groundTexture = loadTexture("resources/textures/sand2.jpg");
     unsigned int fortTexture = loadTexture("resources/textures/wall2.jpg");
+    unsigned int streetsTexture = loadTexture("resources/textures/sand.jpg");
     vector<std::string> faces
     {
-
-        "resources/textures/skybox2/px.jpg",
         "resources/textures/skybox2/nx.jpg",
+        "resources/textures/skybox2/px.jpg",
         "resources/textures/skybox2/py.jpg",
         "resources/textures/skybox2/ny.jpg",
+        "resources/textures/skybox2/nz.jpg",
         "resources/textures/skybox2/pz.jpg",
-        "resources/textures/skybox2/nz.jpg"
 
     };
     unsigned int cubemapTexture = loadCubemap(faces);
@@ -510,6 +531,9 @@ int main()
 
     fortShader.use();
     fortShader.setInt("texture3", 0);
+
+    streetsShader.use();
+    streetsShader.setInt("texture4", 0);
 
     // render loop
     // -----------
@@ -569,6 +593,19 @@ int main()
         glBindVertexArray(fortVAO);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, fortTexture);
+        glDrawArrays(GL_TRIANGLES, 0, 240);
+        glBindVertexArray(1);
+
+        // render streets
+        streetsShader.use();
+
+        streetsShader.setMat4("model", model);
+        streetsShader.setMat4("view", view);
+        streetsShader.setMat4("projection", projection);
+
+        glBindVertexArray(streetsVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, streetsTexture);
         glDrawArrays(GL_TRIANGLES, 0, 180);
         glBindVertexArray(1);
 

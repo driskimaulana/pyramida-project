@@ -8,7 +8,7 @@
 	<winapifamily.h>
 	<dlfcn.h>
 
-1640632608 source:e:\upi\semester 3\grafikom\pyramid_project\main.cpp
+1640654436 source:e:\upi\semester 3\grafikom\pyramid_project\main.cpp
 	<glad/glad.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
